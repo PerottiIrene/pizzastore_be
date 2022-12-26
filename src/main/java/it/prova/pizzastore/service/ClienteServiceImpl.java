@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.prova.pizzastore.model.Cliente;
+import it.prova.pizzastore.model.Pizza;
 import it.prova.pizzastore.repository.cliente.ClienteRepository;
 import it.prova.pizzastore.web.api.exception.NotFoundException;
 
@@ -29,21 +30,22 @@ public class ClienteServiceImpl implements ClienteService {
 	}
 
 	@Override
-	public void aggiorna(Cliente clienteInstance) {
-		repository.save(clienteInstance);
+	public Cliente aggiorna(Cliente clienteInstance) {
+		return repository.save(clienteInstance);
 
 	}
 
 	@Override
 	public void rimuovi(Long idToDelete) {
-		repository.deleteById(idToDelete);
-
+		Cliente cliente=repository.findById(idToDelete).orElse(null);
+		cliente.setAttivo(false);
+		repository.save(cliente);
 	}
 
 	@Override
-	public void inserisciNuovo(Cliente clienteInstance) {
+	public Cliente inserisciNuovo(Cliente clienteInstance) {
 		clienteInstance.setAttivo(true);
-		repository.save(clienteInstance);
+		return repository.save(clienteInstance);
 	}
 
 	@Override

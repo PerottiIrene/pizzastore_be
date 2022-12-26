@@ -11,11 +11,11 @@ public interface ClienteService {
 
 	public Cliente caricaSingoloCliente(Long id);
 	
-	public void aggiorna(Cliente clienteInstance);
+	public Cliente aggiorna(Cliente clienteInstance);
 	
 	public void rimuovi(Long idToDelete);
 
-	public void inserisciNuovo(Cliente clienteInstance);
+	public Cliente inserisciNuovo(Cliente clienteInstance);
 	
 	public List<Cliente> findByExample(Cliente example);
 	
