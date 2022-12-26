@@ -10,11 +10,11 @@ public interface OrdineService {
 
 	public Ordine caricaSingoloOrdine(Long id);
 	
-	public void aggiorna(Ordine ordineInstance);
+	public Ordine aggiorna(Ordine ordineInstance);
 	
 	public void rimuovi(Long idToDelete);
 
-	public void inserisciNuovo(Ordine ordineInstance);
+	public Ordine inserisciNuovo(Ordine ordineInstance);
 	
 	public List<Ordine> findByExample(Ordine example);
 	

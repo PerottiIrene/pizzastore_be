@@ -30,7 +30,6 @@ public class OrdineDTO {
 	@NotNull(message = "{costoTotale.notnull}")
 	private Integer costoTotale;
 
-	@NotNull(message = "{data.notnull}")
 	private LocalDate data;
 
 	private Boolean chiuso;
@@ -52,8 +51,7 @@ public class OrdineDTO {
 
 	public OrdineDTO(Long id,
 			@NotBlank(message = "{codice.notblank}") @Size(min = 4, max = 15, message = "Il valore inserito '${validatedValue}' deve essere lungo tra {min} e {max} caratteri") String codice,
-			@NotNull(message = "{costoTotale.notnull}") Integer costoTotale,
-			@NotNull(message = "{data.notnull}") LocalDate data, Boolean chiuso, ClienteDTO cliente,
+			@NotNull(message = "{costoTotale.notnull}") Integer costoTotale, LocalDate data, Boolean chiuso, ClienteDTO cliente,
 			UtenteDTO fattorino, List<PizzaDTO> pizze) {
 		super();
 		this.id = id;
@@ -157,7 +155,7 @@ public class OrdineDTO {
 		return result;
 	}
 
-	public static OrdineDTO buildOrdineDTOFromModel(Ordine ordineModel) {
+	public static OrdineDTO buildOrdineDTOFromModel(Ordine ordineModel,boolean includePizze, boolean includeCliente, boolean includeFattorino) {
 		OrdineDTO result = new OrdineDTO(ordineModel.getId(), ordineModel.getCodice(), ordineModel.getCostoTotale(),
 				ordineModel.getData(), ordineModel.getChiuso());
 
@@ -165,24 +163,30 @@ public class OrdineDTO {
 			result.pizzeIds = ordineModel.getPizze().stream().map(r -> r.getId()).collect(Collectors.toList())
 					.toArray(new Long[] {});
 		
-		if(!ordineModel.getCliente().equals(null))
-			result.clienteId=ordineModel.getCliente().getId();
+//		if (includeCliente)
+//			result.setCliente(ClienteDTO.buildClienteDTOFromModel(ordineModel.getCliente()));
+//		
+//		if (includeFattorino)
+//			result.setFattorino(UtenteDTO.buildUtenteDTOFromModel(ordineModel.getFattorino()));
 		
-		if(!ordineModel.getFattorino().equals(null))
-			result.fattorinoId=ordineModel.getFattorino().getId();
+//		if(!ordineModel.getCliente().equals(null))
+//			result.clienteId=ordineModel.getCliente().getId();
+//		
+//		if(!ordineModel.getFattorino().equals(null))
+//			result.fattorinoId=ordineModel.getFattorino().getId();
 
 		return result;
 	}
 
-	public static List<OrdineDTO> createOrdineDTOListFromModelList(List<Ordine> modelListInput) {
+	public static List<OrdineDTO> createOrdineDTOListFromModelList(List<Ordine> modelListInput, boolean includePizze, boolean includeCliente, boolean includeFattorino) {
 		return modelListInput.stream().map(ordineEntity -> {
-			return OrdineDTO.buildOrdineDTOFromModel(ordineEntity);
+			return OrdineDTO.buildOrdineDTOFromModel(ordineEntity, includeCliente, includeFattorino, includePizze);
 		}).collect(Collectors.toList());
 	}
 
-	public static Set<OrdineDTO> createOrdineDTOSetFromModelSet(Set<Ordine> modelListInput) {
+	public static Set<OrdineDTO> createOrdineDTOSetFromModelSet(Set<Ordine> modelListInput,boolean includePizze, boolean includeCliente, boolean includeFattorino) {
 		return modelListInput.stream().map(ordineEntity -> {
-			return OrdineDTO.buildOrdineDTOFromModel(ordineEntity);
+			return OrdineDTO.buildOrdineDTOFromModel(ordineEntity,includeCliente, includeFattorino, includePizze);
 		}).collect(Collectors.toSet());
 	}
 	

@@ -1,5 +1,6 @@
 package it.prova.pizzastore.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.prova.pizzastore.model.Ordine;
+import it.prova.pizzastore.model.Pizza;
 import it.prova.pizzastore.repository.ordine.OrdineRepository;
 import it.prova.pizzastore.web.api.exception.NotFoundException;
 
@@ -29,20 +31,23 @@ public class OrdineServiceImpl implements OrdineService {
 	}
 
 	@Override
-	public void aggiorna(Ordine ordineInstance) {
-		repository.save(ordineInstance);
+	public Ordine aggiorna(Ordine ordineInstance) {
+		return repository.save(ordineInstance);
 
 	}
 
 	@Override
 	public void rimuovi(Long idToDelete) {
-		repository.deleteById(idToDelete);
+		Ordine ordine=repository.findById(idToDelete).orElse(null);
+		ordine.setChiuso(true);
+		repository.save(ordine);
 	}
 
 	@Override
-	public void inserisciNuovo(Ordine ordineInstance) {
+	public Ordine inserisciNuovo(Ordine ordineInstance) {
+		ordineInstance.setData(LocalDate.now());
 		ordineInstance.setChiuso(false);
-		repository.save(ordineInstance);
+		return repository.save(ordineInstance);
 
 	}
 
