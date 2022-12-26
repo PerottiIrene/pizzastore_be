@@ -25,7 +25,7 @@ public class ClienteDTO {
 	@NotBlank(message = "{nome.notblank}")
 	private String nome;
 
-	@NotBlank(message = "{cognome.notnull}")
+	@NotBlank(message = "{cognome.notblank}")
 	private String cognome;
 
 	private Boolean attivo;
