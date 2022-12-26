@@ -69,6 +69,15 @@ public class Ordine {
 		this.costoTotale = costoTotale;
 		this.chiuso = chiuso;
 	}
+	
+	public Ordine( String codice, LocalDate data, Integer costoTotale, Boolean chiuso, Cliente cliente) {
+		super();
+		this.data = data;
+		this.codice = codice;
+		this.costoTotale = costoTotale;
+		this.chiuso = chiuso;
+		this.cliente = cliente;
+	}
 
 	public Long getId() {
 		return id;

@@ -3,12 +3,14 @@ package it.prova.pizzastore.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.prova.pizzastore.model.Ordine;
 import it.prova.pizzastore.repository.ordine.OrdineRepository;
 import it.prova.pizzastore.web.api.exception.NotFoundException;
 
+@Service
 public class OrdineServiceImpl implements OrdineService {
 
 	@Autowired
@@ -62,6 +64,8 @@ public class OrdineServiceImpl implements OrdineService {
 		} else {
 			ordineInstance.setChiuso(true);
 		}
+		
+		repository.save(ordineInstance);
 
 	}
 

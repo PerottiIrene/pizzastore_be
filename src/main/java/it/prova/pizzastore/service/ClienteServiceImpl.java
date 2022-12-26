@@ -3,12 +3,14 @@ package it.prova.pizzastore.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.prova.pizzastore.model.Cliente;
 import it.prova.pizzastore.repository.cliente.ClienteRepository;
 import it.prova.pizzastore.web.api.exception.NotFoundException;
 
+@Service
 public class ClienteServiceImpl implements ClienteService {
 
 	@Autowired
@@ -62,6 +64,8 @@ public class ClienteServiceImpl implements ClienteService {
 		} else {
 			clienteInstance.setAttivo(true);
 		}
+		
+		repository.save(clienteInstance);
 
 	}
 

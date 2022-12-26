@@ -3,12 +3,14 @@ package it.prova.pizzastore.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.prova.pizzastore.model.Pizza;
 import it.prova.pizzastore.repository.pizza.PizzaRepository;
 import it.prova.pizzastore.web.api.exception.NotFoundException;
 
+@Service
 public class PizzaServiceImpl implements PizzaService{
 	
 	@Autowired
@@ -27,21 +29,22 @@ public class PizzaServiceImpl implements PizzaService{
 	}
 
 	@Override
-	public void aggiorna(Pizza pizzaInstance) {
-		repository.save(pizzaInstance);
+	public Pizza aggiorna(Pizza pizzaInstance) {
+		return repository.save(pizzaInstance);
 		
 	}
 
 	@Override
 	public void rimuovi(Long idToDelete) {
-		repository.deleteById(idToDelete);
-		
+		Pizza pizza=repository.findById(idToDelete).orElse(null);
+		pizza.setAttivo(false);
+		repository.save(pizza);
 	}
 
 	@Override
-	public void inserisciNuovo(Pizza pizzaInstance) {
+	public Pizza inserisciNuovo(Pizza pizzaInstance) {
 		pizzaInstance.setAttivo(true);
-		repository.save(pizzaInstance);
+		return repository.save(pizzaInstance);
 	}
 
 	@Override
@@ -63,6 +66,8 @@ public class PizzaServiceImpl implements PizzaService{
 		}else {
 			pizza.setAttivo(true);
 		}
+		
+		repository.save(pizza);
 		
 	}
 

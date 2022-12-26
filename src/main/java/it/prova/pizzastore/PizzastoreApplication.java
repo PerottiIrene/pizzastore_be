@@ -1,5 +1,6 @@
 package it.prova.pizzastore;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +8,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import it.prova.pizzastore.model.Cliente;
+import it.prova.pizzastore.model.Ordine;
+import it.prova.pizzastore.model.Pizza;
 import it.prova.pizzastore.model.Ruolo;
 import it.prova.pizzastore.model.Utente;
+import it.prova.pizzastore.service.ClienteService;
+import it.prova.pizzastore.service.OrdineService;
+import it.prova.pizzastore.service.PizzaService;
 import it.prova.pizzastore.service.RuoloService;
 import it.prova.pizzastore.service.UtenteService;
 
@@ -19,6 +26,12 @@ public class PizzastoreApplication implements CommandLineRunner {
 	private RuoloService ruoloServiceInstance;
 	@Autowired
 	private UtenteService utenteServiceInstance;
+	@Autowired
+	private PizzaService pizzaServiceInstance;
+	@Autowired
+	private ClienteService clienteServiceInstance;
+	@Autowired
+	private OrdineService ordineServiceInstance;
 
 	public static void main(String[] args) {
 		SpringApplication.run(PizzastoreApplication.class, args);
@@ -85,6 +98,25 @@ public class PizzastoreApplication implements CommandLineRunner {
 			// l'inserimento avviene come created ma io voglio attivarlo
 			utenteServiceInstance.changeUserAbilitation(fattorino.getId());
 		}
+		
+//		Pizza margherita=new Pizza("margherita", "pomodoro, mozzarella",7,true);
+//		Pizza patate=new Pizza("patate", "patate, salsiccia",10,false);
+//		Pizza diavola=new Pizza("diavola", "pomodoro, salame",10,true);
+//		pizzaServiceInstance.inserisciNuovo(margherita);
+//		pizzaServiceInstance.inserisciNuovo(patate);
+//		pizzaServiceInstance.inserisciNuovo(diavola);
+//		
+//		Cliente cliente1=new Cliente("mario", "rossi", "via milano", true);
+//		Cliente cliente2=new Cliente("sara", "bianchi", "via roma", false);
+//		clienteServiceInstance.inserisciNuovo(cliente1);
+//		clienteServiceInstance.inserisciNuovo(cliente2);
+//		
+//		Ordine ordine1=new Ordine("ordine1", LocalDate.now(), 27, false, cliente1);
+//		ordine1.getPizze().add(margherita);
+//		ordine1.getPizze().add(diavola);
+//		ordine1.getPizze().add(patate);
+//		ordine1.setFattorino(utenteServiceInstance.findByUsername("fattorino"));
+//		ordineServiceInstance.inserisciNuovo(ordine1);
 		
 	}
 
