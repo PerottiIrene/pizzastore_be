@@ -32,6 +32,11 @@ public class Ruolo {
 		this.descrizione = descrizione;
 		this.codice = codice;
 	}
+	
+	public Ruolo(Long id) {
+		super();
+		this.id = id;
+	}
 
 	public Ruolo(Long id, String descrizione, String codice) {
 		super();

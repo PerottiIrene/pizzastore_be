@@ -59,7 +59,7 @@ public class Utente {
 		this.dateCreated = dateCreated;
 	}
 	
-	public Utente(Long id, String username, String password, String nome, String cognome, Date dateCreated,
+	public Utente(Long id, String username, String password, String nome, String cognome, String email, Date dateCreated,
 			StatoUtente stato) {
 		super();
 		this.id = id;
@@ -67,6 +67,7 @@ public class Utente {
 		this.password = password;
 		this.nome = nome;
 		this.cognome = cognome;
+		this.email=email;
 		this.dateCreated = dateCreated;
 		this.stato = stato;
 	}

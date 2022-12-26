@@ -34,6 +34,11 @@ public class Pizza {
 		this.prezzo = prezzo;
 		this.attivo = attivo;
 	}
+	
+	public Pizza(Long id) {
+		super();
+		this.id = id;
+	}
 
 	public Long getId() {
 		return id;
