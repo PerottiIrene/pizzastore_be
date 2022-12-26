@@ -26,6 +26,12 @@ public class Ruolo {
 	private String codice;
 	
 	public Ruolo() {}
+	
+	public Ruolo(String descrizione, String codice) {
+		super();
+		this.descrizione = descrizione;
+		this.codice = codice;
+	}
 
 	public Ruolo(Long id, String descrizione, String codice) {
 		super();

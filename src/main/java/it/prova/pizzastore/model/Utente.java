@@ -31,6 +31,8 @@ public class Utente {
 	private String username;
 	@Column(name = "password")
 	private String password;
+	@Column(name = "email")
+	private String email;
 	@Column(name = "nome")
 	private String nome;
 	@Column(name = "cognome")
@@ -123,6 +125,14 @@ public class Utente {
 
 	public void setStato(StatoUtente stato) {
 		this.stato = stato;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public Set<Ruolo> getRuoli() {
