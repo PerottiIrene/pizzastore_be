@@ -21,5 +21,7 @@ public interface OrdineService {
 	public List<Ordine> findByExampleEagerPizze(Ordine example);
 	
 	public void changeAbilitation(Long id);
+	
+	public List<Ordine> ordiniByFattorino();
 
 }

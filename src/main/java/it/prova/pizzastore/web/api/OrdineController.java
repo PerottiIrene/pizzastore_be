@@ -1,5 +1,6 @@
 package it.prova.pizzastore.web.api;
 
+import java.security.Principal;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -85,6 +86,11 @@ public class OrdineController {
 	@PostMapping("/searchEager")
 	public List<OrdineDTO> searchEager(@RequestBody OrdineDTO example){
 		return OrdineDTO.createOrdineDTOListFromModelList(ordineService.findByExampleEagerPizze(example.buildOrdineModel()));
+	}
+	
+	@GetMapping("/ordiniFattorino")
+	public List<OrdineDTO> ordiniFattorino(){
+		return OrdineDTO.createOrdineDTOListFromModelList(ordineService.ordiniByFattorino());
 	}
 
 }

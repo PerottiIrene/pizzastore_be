@@ -4,11 +4,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.prova.pizzastore.model.Ordine;
 import it.prova.pizzastore.model.Pizza;
+import it.prova.pizzastore.model.Utente;
 import it.prova.pizzastore.repository.ordine.OrdineRepository;
 import it.prova.pizzastore.web.api.exception.NotFoundException;
 
@@ -17,6 +19,9 @@ public class OrdineServiceImpl implements OrdineService {
 
 	@Autowired
 	private OrdineRepository repository;
+	
+	@Autowired
+	private UtenteService utenteService;
 
 	@Override
 	@Transactional(readOnly = true)
@@ -76,6 +81,15 @@ public class OrdineServiceImpl implements OrdineService {
 	@Override
 	public List<Ordine> findByExampleEagerPizze(Ordine example) {
 		return repository.findByExampleEagerPizze(example);
+	}
+
+	@Override
+	public List<Ordine> ordiniByFattorino() {
+		String username=SecurityContextHolder.getContext().getAuthentication().getName();
+		Utente fattorinoInSessione=utenteService.findByUsername(username);
+		
+		System.out.println(fattorinoInSessione.getId());
+		return repository.findAllOrdiniApertiFattorino(fattorinoInSessione.getId());
 	}
 
 }
