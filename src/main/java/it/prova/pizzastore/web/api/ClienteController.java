@@ -77,5 +77,12 @@ public class ClienteController {
 		
 		clienteService.rimuovi(id);
 	}
+	
+	@PostMapping("/search")
+	public List<ClienteDTO> search(@RequestBody ClienteDTO example){
+		
+		return ClienteDTO.createClienteDTOListFromModelList(clienteService.findByExample(example.buildClienteModel()));
+	}
+	
 
 }
