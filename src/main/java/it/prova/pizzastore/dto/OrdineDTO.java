@@ -34,12 +34,10 @@ public class OrdineDTO {
 
 	private Boolean chiuso;
 	
-//	@JsonIgnoreProperties(value = { "ordini" })
 //	@NotNull(message = "{cliente.notnull}")
 	private ClienteDTO cliente;
 	private Long clienteId;
 	
-//	@JsonIgnoreProperties(value = { "ordini" })
 //	@NotNull(message = "{utente.notnull}")
 	private UtenteDTO fattorino;
 	private Long fattorinoId;

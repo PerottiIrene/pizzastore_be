@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.prova.pizzastore.dto.ClienteDTO;
 import it.prova.pizzastore.dto.PizzaDTO;
 import it.prova.pizzastore.model.Pizza;
 import it.prova.pizzastore.service.PizzaService;
@@ -80,6 +81,12 @@ public class PizzaController {
 	public void delete( @PathVariable(required = true) Long id) {
 		
 		pizzaService.rimuovi(id);
+	}
+	
+	@PostMapping("/search")
+	public List<PizzaDTO> search(@RequestBody PizzaDTO example){
+		
+		return PizzaDTO.createPizzaDTOListFromModelList(pizzaService.findByExample(example.buildPizzaModel()));
 	}
 	
 	
