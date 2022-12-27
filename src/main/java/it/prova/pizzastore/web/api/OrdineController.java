@@ -81,5 +81,10 @@ public class OrdineController {
 	public List<OrdineDTO> search(@RequestBody OrdineDTO example){
 		return OrdineDTO.createOrdineDTOListFromModelList(ordineService.findByExample(example.buildOrdineModel()));
 	}
+	
+	@PostMapping("/searchEager")
+	public List<OrdineDTO> searchEager(@RequestBody OrdineDTO example){
+		return OrdineDTO.createOrdineDTOListFromModelList(ordineService.findByExampleEagerPizze(example.buildOrdineModel()));
+	}
 
 }

@@ -73,4 +73,9 @@ public class OrdineServiceImpl implements OrdineService {
 
 	}
 
+	@Override
+	public List<Ordine> findByExampleEagerPizze(Ordine example) {
+		return repository.findByExampleEagerPizze(example);
+	}
+
 }

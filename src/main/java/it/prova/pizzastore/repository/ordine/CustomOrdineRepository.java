@@ -7,5 +7,7 @@ import it.prova.pizzastore.model.Ordine;
 public interface CustomOrdineRepository {
 	
 	List<Ordine> findByExample(Ordine example);
+	
+	List<Ordine> findByExampleEagerPizze(Ordine example);
 
 }

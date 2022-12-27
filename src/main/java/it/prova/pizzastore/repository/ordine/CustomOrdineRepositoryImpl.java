@@ -67,4 +67,42 @@ public class CustomOrdineRepositoryImpl implements CustomOrdineRepository{
 		return typedQuery.getResultList();
 	}
 
+	@Override
+	public List<Ordine> findByExampleEagerPizze(Ordine example) {
+		Map<String, Object> paramaterMap = new HashMap<String, Object>();
+		List<String> whereClauses = new ArrayList<String>();
+
+		StringBuilder queryBuilder = new StringBuilder(
+				"select o from Ordine o left join o.pizze p where o.id = o.id ");
+
+		if (StringUtils.isNotEmpty(example.getCodice())) {
+			whereClauses.add(" o.codice  like :codice ");
+			paramaterMap.put("codice", "%" + example.getCodice() + "%");
+		}
+		
+		if (example.getData() != null) {
+			whereClauses.add("o.data >= :data ");
+			paramaterMap.put("data", example.getData());
+		}
+		
+		if (example.getCliente() != null && example.getCliente().getId() != null) {
+			whereClauses.add("o.cliente.id = :idCliente ");
+			paramaterMap.put("idCliente", example.getCliente().getId());
+		}
+		
+		if (example.getPizze() != null && !example.getPizze().isEmpty()) {
+			whereClauses.add("p in :pizze ");
+			paramaterMap.put("pizze", example.getPizze());
+		}
+
+		queryBuilder.append(!whereClauses.isEmpty() ? " and " : "");
+		queryBuilder.append(StringUtils.join(whereClauses, " and "));
+		TypedQuery<Ordine> typedQuery = entityManager.createQuery(queryBuilder.toString(), Ordine.class);
+
+		for (String key : paramaterMap.keySet()) {
+			typedQuery.setParameter(key, paramaterMap.get(key));
+		}
+		return typedQuery.getResultList();
+	}
+
 }
