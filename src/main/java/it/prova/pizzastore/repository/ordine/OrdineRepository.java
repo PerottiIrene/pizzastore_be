@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import it.prova.pizzastore.model.Ordine;
 
-public interface OrdineRepository extends CrudRepository<Ordine, Long>{
+public interface OrdineRepository extends CrudRepository<Ordine, Long>,CustomOrdineRepository{
 
 }

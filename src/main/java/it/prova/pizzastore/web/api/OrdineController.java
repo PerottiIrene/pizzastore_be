@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.prova.pizzastore.dto.ClienteDTO;
 import it.prova.pizzastore.dto.OrdineDTO;
 import it.prova.pizzastore.model.Ordine;
 import it.prova.pizzastore.service.OrdineService;
@@ -31,7 +32,7 @@ public class OrdineController {
 
 	@GetMapping
 	public List<OrdineDTO> getAll() {
-		return OrdineDTO.createOrdineDTOListFromModelList(ordineService.listAll(),true,true,true);
+		return OrdineDTO.createOrdineDTOListFromModelList(ordineService.listAll());
 	}
 
 	// gli errori di validazione vengono mostrati con 400 Bad Request ma
@@ -43,8 +44,8 @@ public class OrdineController {
 		if (ordineInput.getId() != null)
 			throw new IdNotNullForInsertException("Non è ammesso fornire un id per la creazione");
 
-		Ordine ordineInserito = ordineService.inserisciNuovo(ordineInput.buildOrdineModel(true));
-		return OrdineDTO.buildOrdineDTOFromModel(ordineInserito,true,true,true);
+		Ordine ordineInserito = ordineService.inserisciNuovo(ordineInput.buildOrdineModel());
+		return OrdineDTO.buildOrdineDTOFromModel(ordineInserito,true,false,false);
 	}
 
 	@GetMapping("/{id}")
@@ -54,7 +55,7 @@ public class OrdineController {
 		if (ordine == null)
 			throw new NotFoundException("Ordine not found con id: " + id);
 
-		return OrdineDTO.buildOrdineDTOFromModel(ordine,true,true,true);
+		return OrdineDTO.buildOrdineDTOFromModel(ordine,false,false,false);
 	}
 
 	@PutMapping("/{id}")
@@ -65,8 +66,8 @@ public class OrdineController {
 			throw new NotFoundException("ordine not found con id: " + id);
 
 		ordineInput.setId(id);
-		Ordine ordineAggiornato = ordineService.aggiorna(ordineInput.buildOrdineModel(true));
-		return OrdineDTO.buildOrdineDTOFromModel(ordineAggiornato,true,true,true);
+		Ordine ordineAggiornato = ordineService.aggiorna(ordineInput.buildOrdineModel());
+		return OrdineDTO.buildOrdineDTOFromModel(ordineAggiornato,false,false,false);
 	}
 
 	@DeleteMapping("/{id}")
@@ -74,6 +75,11 @@ public class OrdineController {
 	public void delete(@PathVariable(required = true) Long id) {
 
 		ordineService.rimuovi(id);
+	}
+	
+	@PostMapping("/search")
+	public List<OrdineDTO> search(@RequestBody OrdineDTO example){
+		return OrdineDTO.createOrdineDTOListFromModelList(ordineService.findByExample(example.buildOrdineModel()));
 	}
 
 }

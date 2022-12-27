@@ -2,8 +2,10 @@ package it.prova.pizzastore.dto;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
@@ -36,21 +38,19 @@ public class OrdineDTO {
 	
 //	@NotNull(message = "{cliente.notnull}")
 	private ClienteDTO cliente;
-	private Long clienteId;
 	
 //	@NotNull(message = "{utente.notnull}")
 	private UtenteDTO fattorino;
-	private Long fattorinoId;
 	
-	private List<PizzaDTO> pizze;
-	private Long[] pizzeIds;
+	private Set<PizzaDTO> pizze=new HashSet<>();
+//	private Long[] pizzeIds;
 	
 	public OrdineDTO() {}
 
 	public OrdineDTO(Long id,
 			@NotBlank(message = "{codice.notblank}") @Size(min = 4, max = 15, message = "Il valore inserito '${validatedValue}' deve essere lungo tra {min} e {max} caratteri") String codice,
 			@NotNull(message = "{costoTotale.notnull}") Integer costoTotale, LocalDate data, Boolean chiuso, ClienteDTO cliente,
-			UtenteDTO fattorino, List<PizzaDTO> pizze) {
+			UtenteDTO fattorino, Set<PizzaDTO> pizze) {
 		super();
 		this.id = id;
 		this.codice = codice;
@@ -130,15 +130,15 @@ public class OrdineDTO {
 		this.fattorino = fattorino;
 	}
 
-	public List<PizzaDTO> getPizze() {
+	public Set<PizzaDTO> getPizze() {
 		return pizze;
 	}
 
-	public void setPizze(List<PizzaDTO> pizze) {
+	public void setPizze(Set<PizzaDTO> pizze) {
 		this.pizze = pizze;
 	}
 	
-	public Ordine buildOrdineModel(boolean includePizze) {
+	public Ordine buildOrdineModel() {
 		Ordine result = new Ordine(this.id, this.data, this.codice, this.costoTotale, this.chiuso);
 		
 		if (this.cliente != null)
@@ -147,8 +147,9 @@ public class OrdineDTO {
 		if (this.fattorino != null)
 			result.setFattorino(this.fattorino.buildUtenteModel(true));
 		
-		if (includePizze & pizzeIds != null)
-			result.setPizze(Arrays.asList(pizzeIds).stream().map(id -> new Pizza(id)).collect(Collectors.toSet()));
+		if (this.pizze != null)
+			result.setPizze(pizze.stream().map(PizzaDTO::buildPizzaModel).collect(Collectors.toSet()));
+//			result.setPizze(Arrays.asList(pizzeIds).stream().map(id -> new Pizza(id)).collect(Collectors.toSet()));
 
 		return result;
 	}
@@ -156,16 +157,19 @@ public class OrdineDTO {
 	public static OrdineDTO buildOrdineDTOFromModel(Ordine ordineModel,boolean includePizze, boolean includeCliente, boolean includeFattorino) {
 		OrdineDTO result = new OrdineDTO(ordineModel.getId(), ordineModel.getCodice(), ordineModel.getCostoTotale(),
 				ordineModel.getData(), ordineModel.getChiuso());
-
-		if (!ordineModel.getPizze().isEmpty())
-			result.pizzeIds = ordineModel.getPizze().stream().map(r -> r.getId()).collect(Collectors.toList())
-					.toArray(new Long[] {});
 		
-//		if (includeCliente)
-//			result.setCliente(ClienteDTO.buildClienteDTOFromModel(ordineModel.getCliente()));
-//		
-//		if (includeFattorino)
-//			result.setFattorino(UtenteDTO.buildUtenteDTOFromModel(ordineModel.getFattorino()));
+		if(includePizze)
+			result.setPizze(PizzaDTO.createPizzaDTOSetFromModelSet(ordineModel.getPizze()));
+
+//		if (!ordineModel.getPizze().isEmpty())
+//			result.pizzeIds = ordineModel.getPizze().stream().map(r -> r.getId()).collect(Collectors.toList())
+//					.toArray(new Long[] {});
+		
+		if (includeCliente)
+			result.setCliente(ClienteDTO.buildClienteDTOFromModel(ordineModel.getCliente()));
+		
+		if (includeFattorino)
+			result.setFattorino(UtenteDTO.buildUtenteDTOFromModel(ordineModel.getFattorino()));
 		
 //		if(!ordineModel.getCliente().equals(null))
 //			result.clienteId=ordineModel.getCliente().getId();
@@ -176,15 +180,15 @@ public class OrdineDTO {
 		return result;
 	}
 
-	public static List<OrdineDTO> createOrdineDTOListFromModelList(List<Ordine> modelListInput, boolean includePizze, boolean includeCliente, boolean includeFattorino) {
+	public static List<OrdineDTO> createOrdineDTOListFromModelList(List<Ordine> modelListInput ) {
 		return modelListInput.stream().map(ordineEntity -> {
-			return OrdineDTO.buildOrdineDTOFromModel(ordineEntity, includeCliente, includeFattorino, includePizze);
+			return OrdineDTO.buildOrdineDTOFromModel(ordineEntity, false,false,false);
 		}).collect(Collectors.toList());
 	}
 
-	public static Set<OrdineDTO> createOrdineDTOSetFromModelSet(Set<Ordine> modelListInput,boolean includePizze, boolean includeCliente, boolean includeFattorino) {
+	public static Set<OrdineDTO> createOrdineDTOSetFromModelSet(Set<Ordine> modelListInput) {
 		return modelListInput.stream().map(ordineEntity -> {
-			return OrdineDTO.buildOrdineDTOFromModel(ordineEntity,includeCliente, includeFattorino, includePizze);
+			return OrdineDTO.buildOrdineDTOFromModel(ordineEntity,false,false,false);
 		}).collect(Collectors.toSet());
 	}
 	
