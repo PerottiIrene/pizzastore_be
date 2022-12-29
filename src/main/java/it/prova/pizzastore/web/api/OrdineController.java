@@ -1,6 +1,7 @@
 package it.prova.pizzastore.web.api;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -17,12 +18,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+
 import it.prova.pizzastore.dto.ClienteDTO;
+import it.prova.pizzastore.dto.DateStatisticheDTO;
 import it.prova.pizzastore.dto.OrdineDTO;
+import it.prova.pizzastore.dto.StatisticheDTO;
 import it.prova.pizzastore.model.Ordine;
 import it.prova.pizzastore.service.OrdineService;
 import it.prova.pizzastore.web.api.exception.IdNotNullForInsertException;
 import it.prova.pizzastore.web.api.exception.NotFoundException;
+
 
 @RestController
 @RequestMapping("/api/ordine")
@@ -46,7 +54,7 @@ public class OrdineController {
 			throw new IdNotNullForInsertException("Non è ammesso fornire un id per la creazione");
 
 		Ordine ordineInserito = ordineService.inserisciNuovo(ordineInput.buildOrdineModel());
-		return OrdineDTO.buildOrdineDTOFromModel(ordineInserito,true,false,false);
+		return OrdineDTO.buildOrdineDTOFromModel(ordineInserito, true, false, false);
 	}
 
 	@GetMapping("/{id}")
@@ -56,7 +64,7 @@ public class OrdineController {
 		if (ordine == null)
 			throw new NotFoundException("Ordine not found con id: " + id);
 
-		return OrdineDTO.buildOrdineDTOFromModel(ordine,false,false,false);
+		return OrdineDTO.buildOrdineDTOFromModel(ordine, false, false, false);
 	}
 
 	@PutMapping("/{id}")
@@ -68,7 +76,7 @@ public class OrdineController {
 
 		ordineInput.setId(id);
 		Ordine ordineAggiornato = ordineService.aggiorna(ordineInput.buildOrdineModel());
-		return OrdineDTO.buildOrdineDTOFromModel(ordineAggiornato,false,false,false);
+		return OrdineDTO.buildOrdineDTOFromModel(ordineAggiornato, false, false, false);
 	}
 
 	@DeleteMapping("/{id}")
@@ -77,20 +85,35 @@ public class OrdineController {
 
 		ordineService.rimuovi(id);
 	}
-	
+
 	@PostMapping("/search")
-	public List<OrdineDTO> search(@RequestBody OrdineDTO example){
+	public List<OrdineDTO> search(@RequestBody OrdineDTO example) {
 		return OrdineDTO.createOrdineDTOListFromModelList(ordineService.findByExample(example.buildOrdineModel()));
 	}
-	
+
 	@PostMapping("/searchEager")
-	public List<OrdineDTO> searchEager(@RequestBody OrdineDTO example){
-		return OrdineDTO.createOrdineDTOListFromModelList(ordineService.findByExampleEagerPizze(example.buildOrdineModel()));
+	public List<OrdineDTO> searchEager(@RequestBody OrdineDTO example) {
+		return OrdineDTO
+				.createOrdineDTOListFromModelList(ordineService.findByExampleEagerPizze(example.buildOrdineModel()));
 	}
-	
+
 	@GetMapping("/ordiniFattorino")
-	public List<OrdineDTO> ordiniFattorino(){
+	public List<OrdineDTO> ordiniFattorino() {
 		return OrdineDTO.createOrdineDTOListFromModelList(ordineService.ordiniByFattorino());
+	}
+
+	@GetMapping("/statistiche")
+	public StatisticheDTO statistiche(@RequestBody DateStatisticheDTO date) {
+		
+		StatisticheDTO statistiche = new StatisticheDTO();
+
+		statistiche.setNumeroOrdini(ordineService.numeroOrdiniNellIntervalloDiDate(date.getDataInizio(), date.getDataFine()));
+		statistiche.setNumeroPizze(ordineService.numeroPizzeOrdinateNellIntervalloDiDate(date.getDataInizio(), date.getDataFine()));
+		statistiche.setRicaviTotali(ordineService.ricaviTotaliOrdini(date.getDataInizio(), date.getDataFine()));
+		statistiche.setListaClienti(ClienteDTO.createClienteDTOListFromModelList(
+				ordineService.clientiConCostoTotaleOrdineOltre(date.getDataInizio(), date.getDataFine())));
+
+		return statistiche;
 	}
 
 }

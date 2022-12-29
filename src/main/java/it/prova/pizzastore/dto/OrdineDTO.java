@@ -29,27 +29,25 @@ public class OrdineDTO {
 	@Size(min = 4, max = 15, message = "Il valore inserito '${validatedValue}' deve essere lungo tra {min} e {max} caratteri")
 	private String codice;
 
-	@NotNull(message = "{costoTotale.notnull}")
 	private Integer costoTotale;
 
 	private LocalDate data;
 
 	private Boolean chiuso;
 	
-//	@NotNull(message = "{cliente.notnull}")
+	@NotNull(message = "{cliente.notnull}")
 	private ClienteDTO cliente;
 	
-//	@NotNull(message = "{utente.notnull}")
+	@NotNull(message = "{utente.notnull}")
 	private UtenteDTO fattorino;
 	
 	private Set<PizzaDTO> pizze=new HashSet<>();
-//	private Long[] pizzeIds;
 	
 	public OrdineDTO() {}
 
 	public OrdineDTO(Long id,
 			@NotBlank(message = "{codice.notblank}") @Size(min = 4, max = 15, message = "Il valore inserito '${validatedValue}' deve essere lungo tra {min} e {max} caratteri") String codice,
-			@NotNull(message = "{costoTotale.notnull}") Integer costoTotale, LocalDate data, Boolean chiuso, ClienteDTO cliente,
+			 Integer costoTotale, LocalDate data, Boolean chiuso, ClienteDTO cliente,
 			UtenteDTO fattorino, Set<PizzaDTO> pizze) {
 		super();
 		this.id = id;

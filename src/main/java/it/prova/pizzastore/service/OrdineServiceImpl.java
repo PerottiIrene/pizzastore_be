@@ -1,6 +1,7 @@
 package it.prova.pizzastore.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import it.prova.pizzastore.model.Cliente;
 import it.prova.pizzastore.model.Ordine;
 import it.prova.pizzastore.model.Pizza;
 import it.prova.pizzastore.model.Utente;
@@ -37,6 +39,7 @@ public class OrdineServiceImpl implements OrdineService {
 
 	@Override
 	public Ordine aggiorna(Ordine ordineInstance) {
+		ordineInstance.setCostoTotale(calcolaSommaPrezziPizze(ordineInstance.getId()));
 		return repository.save(ordineInstance);
 
 	}
@@ -52,6 +55,8 @@ public class OrdineServiceImpl implements OrdineService {
 	public Ordine inserisciNuovo(Ordine ordineInstance) {
 		ordineInstance.setData(LocalDate.now());
 		ordineInstance.setChiuso(false);
+		repository.save(ordineInstance);
+		ordineInstance.setCostoTotale(repository.sommaPrezziPizze(ordineInstance.getId()));
 		return repository.save(ordineInstance);
 
 	}
@@ -88,8 +93,55 @@ public class OrdineServiceImpl implements OrdineService {
 		String username=SecurityContextHolder.getContext().getAuthentication().getName();
 		Utente fattorinoInSessione=utenteService.findByUsername(username);
 		
-		System.out.println(fattorinoInSessione.getId());
 		return repository.findAllOrdiniApertiFattorino(fattorinoInSessione.getId());
+	}
+
+	@Override
+	public Integer calcolaSommaPrezziPizze(Long idOrdine) {
+		return repository.sommaPrezziPizze(idOrdine);
+	}
+
+	@Override
+	public List<Ordine> ordiniBetween(LocalDate dataInizio, LocalDate dataFine) {
+		return repository.listaOrdiniBetween(dataInizio, dataFine);
+	}
+
+	@Override
+	public Integer ricaviTotaliOrdini(LocalDate dataInizio, LocalDate dataFine) {
+		List<Ordine> listaOrdini=repository.listaOrdiniBetween(dataInizio, dataFine);
+		Integer ricavoTot=0;
+		
+		for(Ordine ordineItem:listaOrdini) {
+			ricavoTot+=ordineItem.getCostoTotale();
+		}
+		
+		return ricavoTot;
+	}
+
+	@Override
+	public Integer numeroOrdiniNellIntervalloDiDate(LocalDate dataInizio, LocalDate dataFine) {
+		List<Ordine> listaOrdini=repository.listaOrdiniBetween(dataInizio, dataFine);
+		Integer numeroOrdini=listaOrdini.size();
+		return numeroOrdini;
+	}
+
+	@Override
+	public List<Cliente> clientiConCostoTotaleOrdineOltre(LocalDate dataInizio, LocalDate dataFine) {
+		List<Ordine> listaOrdini=repository.listaOrdiniBetween(dataInizio, dataFine);
+		List<Cliente> clientiConOrdineOltre=new ArrayList<>();
+		
+		for(Ordine ordineItem:listaOrdini) {
+			if(ordineItem.getCostoTotale() > 100) {
+				clientiConOrdineOltre.add(ordineItem.getCliente());
+			}
+		}
+		
+		return clientiConOrdineOltre;
+	}
+
+	@Override
+	public Integer numeroPizzeOrdinateNellIntervalloDiDate(LocalDate dataInizio, LocalDate dataFine) {
+		return repository.numeroPizzeOrdinateNellIntervalloDiDate(dataInizio, dataFine);
 	}
 
 }
