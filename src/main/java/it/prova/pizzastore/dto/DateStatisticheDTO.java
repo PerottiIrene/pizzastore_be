@@ -33,7 +33,5 @@ public class DateStatisticheDTO {
 	public void setDataFine(LocalDate dataFine) {
 		this.dataFine = dataFine;
 	}
-	
-	
 
 }
