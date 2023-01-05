@@ -8,9 +8,11 @@ import it.prova.pizzastore.model.Ordine;
 
 public interface OrdineService {
 	
-	public List<Ordine> listAll() ;
+	public List<Ordine> listAll(boolean eager) ;
 
 	public Ordine caricaSingoloOrdine(Long id);
+	
+	public Ordine caricaSingoloOrdineEager(Long id);
 	
 	public Ordine aggiorna(Ordine ordineInstance);
 	

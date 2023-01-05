@@ -2,11 +2,13 @@ package it.prova.pizzastore.repository.ordine;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import it.prova.pizzastore.model.Ordine;
+import it.prova.pizzastore.model.Utente;
 
 public interface OrdineRepository extends CrudRepository<Ordine, Long>,CustomOrdineRepository{
 	
@@ -21,5 +23,11 @@ public interface OrdineRepository extends CrudRepository<Ordine, Long>,CustomOrd
 	
 	@Query(value= "select count(op.pizza_id) from ordine_pizza op join Ordine o on o.id=op.ordine_id where o.data between ?1 and ?2", nativeQuery = true)
 	Integer numeroPizzeOrdinateNellIntervalloDiDate(LocalDate dataInizio,LocalDate dataFine);
+	
+	@Query("from Ordine o join fetch o.cliente c left join fetch o.pizze p where o.id = ?1")
+	Ordine findByIdEager(Long id);
+	
+	@Query("select o from Ordine o join fetch o.cliente")
+	List<Ordine> findAllEager();
 
 }

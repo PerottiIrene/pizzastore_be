@@ -27,7 +27,10 @@ public class OrdineServiceImpl implements OrdineService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<Ordine> listAll() {
+	public List<Ordine> listAll(boolean eager) {
+		if (eager)
+			return (List<Ordine>) repository.findAllEager();
+		
 		return (List<Ordine>) repository.findAll();
 	}
 
@@ -142,6 +145,11 @@ public class OrdineServiceImpl implements OrdineService {
 	@Override
 	public Integer numeroPizzeOrdinateNellIntervalloDiDate(LocalDate dataInizio, LocalDate dataFine) {
 		return repository.numeroPizzeOrdinateNellIntervalloDiDate(dataInizio, dataFine);
+	}
+
+	@Override
+	public Ordine caricaSingoloOrdineEager(Long id) {
+		return repository.findByIdEager(id);
 	}
 
 }

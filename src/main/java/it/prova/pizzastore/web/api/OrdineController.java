@@ -41,7 +41,7 @@ public class OrdineController {
 
 	@GetMapping
 	public List<OrdineDTO> getAll() {
-		return OrdineDTO.createOrdineDTOListFromModelList(ordineService.listAll());
+		return OrdineDTO.createOrdineDTOListFromModelList(ordineService.listAll(true));
 	}
 
 	// gli errori di validazione vengono mostrati con 400 Bad Request ma
@@ -59,7 +59,7 @@ public class OrdineController {
 
 	@GetMapping("/{id}")
 	public OrdineDTO findById(@PathVariable(value = "id", required = true) long id) {
-		Ordine ordine = ordineService.caricaSingoloOrdine(id);
+		Ordine ordine = ordineService.caricaSingoloOrdineEager(id);
 
 		if (ordine == null)
 			throw new NotFoundException("Ordine not found con id: " + id);

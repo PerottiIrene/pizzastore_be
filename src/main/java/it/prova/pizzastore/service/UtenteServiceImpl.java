@@ -91,4 +91,9 @@ public class UtenteServiceImpl implements UtenteService{
 		return repository.findByUsername(username).orElse(null);
 	}
 
+	@Override
+	public List<Utente> findAllFattorini() {
+		return repository.findAllFattorini();
+	}
+
 }
