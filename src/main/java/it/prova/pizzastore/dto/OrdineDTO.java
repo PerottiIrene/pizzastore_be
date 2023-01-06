@@ -42,6 +42,7 @@ public class OrdineDTO {
 	private UtenteDTO fattorino;
 	
 	private Set<PizzaDTO> pizze=new HashSet<>();
+//	private Long[] pizzeIds;
 	
 	public OrdineDTO() {}
 
@@ -147,6 +148,7 @@ public class OrdineDTO {
 		
 		if (this.pizze != null)
 			result.setPizze(pizze.stream().map(PizzaDTO::buildPizzaModel).collect(Collectors.toSet()));
+//		if(this.pizzeIds != null)
 //			result.setPizze(Arrays.asList(pizzeIds).stream().map(id -> new Pizza(id)).collect(Collectors.toSet()));
 
 		return result;
@@ -156,24 +158,27 @@ public class OrdineDTO {
 		OrdineDTO result = new OrdineDTO(ordineModel.getId(), ordineModel.getCodice(), ordineModel.getCostoTotale(),
 				ordineModel.getData(), ordineModel.getChiuso());
 		
-		if(includePizze)
-			result.setPizze(PizzaDTO.createPizzaDTOSetFromModelSet(ordineModel.getPizze()));
+//		if(includePizze)
+//			result.setPizze(PizzaDTO.createPizzaDTOSetFromModelSet(ordineModel.getPizze()));
 
 //		if (!ordineModel.getPizze().isEmpty())
 //			result.pizzeIds = ordineModel.getPizze().stream().map(r -> r.getId()).collect(Collectors.toList())
 //					.toArray(new Long[] {});
 		
-		if (includeCliente)
+		if (!ordineModel.getPizze().isEmpty())
+			result.setPizze(PizzaDTO.createPizzaDTOSetFromModelSet(ordineModel.getPizze()));
+		
+//		if (includeCliente)
+//			result.setCliente(ClienteDTO.buildClienteDTOFromModel(ordineModel.getCliente()));
+//		
+//		if (includeFattorino)
+//			result.setFattorino(UtenteDTO.buildUtenteDTOFromModel(ordineModel.getFattorino()));
+		
+		if(!ordineModel.getCliente().equals(null))
 			result.setCliente(ClienteDTO.buildClienteDTOFromModel(ordineModel.getCliente()));
 		
-		if (includeFattorino)
+		if(!ordineModel.getFattorino().equals(null))
 			result.setFattorino(UtenteDTO.buildUtenteDTOFromModel(ordineModel.getFattorino()));
-		
-//		if(!ordineModel.getCliente().equals(null))
-//			result.clienteId=ordineModel.getCliente().getId();
-//		
-//		if(!ordineModel.getFattorino().equals(null))
-//			result.fattorinoId=ordineModel.getFattorino().getId();
 
 		return result;
 	}

@@ -54,7 +54,7 @@ public class OrdineController {
 			throw new IdNotNullForInsertException("Non è ammesso fornire un id per la creazione");
 
 		Ordine ordineInserito = ordineService.inserisciNuovo(ordineInput.buildOrdineModel());
-		return OrdineDTO.buildOrdineDTOFromModel(ordineInserito, true, false, false);
+		return OrdineDTO.buildOrdineDTOFromModel(ordineInserito, true, true, true);
 	}
 
 	@GetMapping("/{id}")
@@ -64,19 +64,19 @@ public class OrdineController {
 		if (ordine == null)
 			throw new NotFoundException("Ordine not found con id: " + id);
 
-		return OrdineDTO.buildOrdineDTOFromModel(ordine, false, false, false);
+		return OrdineDTO.buildOrdineDTOFromModel(ordine, true, true, true);
 	}
 
 	@PutMapping("/{id}")
 	public OrdineDTO update(@Valid @RequestBody OrdineDTO ordineInput, @PathVariable(required = true) Long id) {
-		Ordine ordine = ordineService.caricaSingoloOrdine(id);
+		Ordine ordine = ordineService.caricaSingoloOrdineEager(id);
 
 		if (ordine == null)
 			throw new NotFoundException("ordine not found con id: " + id);
 
 		ordineInput.setId(id);
 		Ordine ordineAggiornato = ordineService.aggiorna(ordineInput.buildOrdineModel());
-		return OrdineDTO.buildOrdineDTOFromModel(ordineAggiornato, false, false, false);
+		return OrdineDTO.buildOrdineDTOFromModel(ordineAggiornato, true, true, true);
 	}
 
 	@DeleteMapping("/{id}")
